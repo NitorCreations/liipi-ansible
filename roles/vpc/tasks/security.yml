@@ -1,0 +1,28 @@
+---
+- name: hsl-liipi-internal-sg
+  local_action:
+    module: ec2_group
+    name: hsl-liipi-internal
+    description: hsl-liipi-internal
+    vpc_id: '{{ vpc.vpc_id }}'
+    region: eu-west-1
+    rules:
+      - proto: tcp
+        from_port: 80
+        to_port: 80
+        cidr_ip: 0.0.0.0/0
+      - proto: tcp
+        from_port: 22
+        to_port: 22
+        cidr_ip: 10.0.0.0/8
+      - proto: udp
+        from_port: 10050
+        to_port: 10050
+        cidr_ip: 10.0.0.0/8
+    # rules_egress:
+    #   - proto: tcp
+    #     from_port: 80
+    #     to_port: 80
+    #     group_name: example-other
+    #     # description to use if example-other needs to be created
+    #     group_desc: other example EC2 group

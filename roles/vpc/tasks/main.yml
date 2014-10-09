@@ -1,0 +1,36 @@
+---
+# Note: None of these examples set aws_access_key, aws_secret_key, or region.
+# It is assumed that their matching environment variables are set.
+
+# Full creation example with subnets and optional availability zones.
+# The absence or presence of subnets deletes or creates them respectively.
+- name: create vpc  
+  local_action:
+    module: ec2_vpc
+    state: present
+    cidr_block: 172.31.0.0/16
+    resource_tags: { "Name":"Liipi-VPC" }
+    subnets:
+      - cidr: 172.31.0.0/24
+        az: eu-west-1a
+        resource_tags: { "Environment":"Dev"}
+      - cidr: 172.31.1.0/24
+        az: eu-west-1a
+        resource_tags: { "Environment":"Test"}
+      - cidr: 172.31.2.0/24
+        az: eu-west-1a
+        resource_tags: { "Environment":"Prod"}
+    internet_gateway: True
+    route_tables:
+      - subnets:
+          - 172.31.0.0/24
+          - 172.31.1.0/24
+          - 172.31.2.0/24
+        routes:
+          - dest: 0.0.0.0/0
+            gw: igw
+    region: eu-west-1
+    wait: yes
+    wait_timeout: 60
+  register: vpc
+- include: security.yml

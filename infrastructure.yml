@@ -1,0 +1,6 @@
+---
+# file: infrastructure.yml
+- hosts: all
+  connection: local
+  roles:
+    - vpc
