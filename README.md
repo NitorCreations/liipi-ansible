@@ -1,6 +1,6 @@
 Ansible playbook to create an AWS VPC environment.
 
-Creates a new VPC and security groups inside it. That's all for now.
+Creates a new VPC and security groups inside it and some development environment instances. That's it for now.
 
 Usage:
 
