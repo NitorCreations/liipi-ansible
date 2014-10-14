@@ -8,17 +8,33 @@
     region: eu-west-1
     rules:
       - proto: tcp
-        from_port: 80
-        to_port: 80
-        cidr_ip: 0.0.0.0/0
-      - proto: tcp
         from_port: 22
         to_port: 22
-        cidr_ip: 10.0.0.0/8
-      - proto: udp
-        from_port: 10050
-        to_port: 10050
-        cidr_ip: 10.0.0.0/8
+        cidr_ip: 0.0.0.0/0
+      - proto: tcp
+        from_port: 5000
+        to_port: 5000
+        cidr_ip: 172.31.0.0/24
+      - proto: tcp
+        from_port: 8080
+        to_port: 8080
+        cidr_ip: 172.31.0.0/24
+      - proto: tcp
+        from_port: 8081
+        to_port: 8081
+        cidr_ip: 172.31.0.0/24
+      - proto: tcp
+        from_port: 8153
+        to_port: 8153
+        cidr_ip: 172.31.0.0/24
+      - proto: tcp
+        from_port: 9090
+        to_port: 9090
+        cidr_ip: 172.31.0.0/24
+      - proto: tcp
+        from_port: 9999
+        to_port: 9999
+        cidr_ip: 172.31.0.0/24
     # rules_egress:
     #   - proto: tcp
     #     from_port: 80
@@ -26,3 +42,29 @@
     #     group_name: example-other
     #     # description to use if example-other needs to be created
     #     group_desc: other example EC2 group
+  register: internal-sg
+
+- name: hsl-liipi-internet-sg
+  local_action:
+    module: ec2_group
+    name: hsl-liipi-internet
+    description: hsl-liipi-internet
+    vpc_id: '{{ vpc.vpc_id }}'
+    region: eu-west-1
+    rules:
+      - proto: tcp
+        from_port: 22
+        to_port: 22
+        cidr_ip: 0.0.0.0/0
+      - proto: tcp
+        from_port: 443
+        to_port: 443
+        cidr_ip: 0.0.0.0/0
+    # rules_egress:
+    #   - proto: tcp
+    #     from_port: 80
+    #     to_port: 80
+    #     group_name: example-other
+    #     # description to use if example-other needs to be created
+    #     group_desc: other example EC2 group
+  register: internet-sg
