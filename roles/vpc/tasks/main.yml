@@ -33,4 +33,15 @@
     wait: yes
     wait_timeout: 60
   register: vpc
+
 - include: security.yml
+
+- name: store vpc info for debug
+  copy: 
+    content="{{vpc|to_nice_json}}" dest="~/vpc.json" mode=0400
+
+- name: store dev subnet id as vpc_dev_subnet_id
+  set_fact: 
+    vpc_dev_subnet_id: "{{item.id}}"
+  when: item.resource_tags.Environment == "Dev"
+  with_items: vpc.subnets
