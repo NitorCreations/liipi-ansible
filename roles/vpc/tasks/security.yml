@@ -1,5 +1,5 @@
 ---
-- name: hsl-liipi-internal-sg
+- name: Configure hsl-liipi-internal security group
   local_action:
     module: ec2_group
     name: hsl-liipi-internal
@@ -27,14 +27,6 @@
         from_port: 8153
         to_port: 8153
         cidr_ip: 172.31.0.0/24
-      - proto: tcp
-        from_port: 9090
-        to_port: 9090
-        cidr_ip: 172.31.0.0/24
-      - proto: tcp
-        from_port: 9999
-        to_port: 9999
-        cidr_ip: 172.31.0.0/24
     # rules_egress:
     #   - proto: tcp
     #     from_port: 80
@@ -44,7 +36,7 @@
     #     group_desc: other example EC2 group
   register: internal-sg
 
-- name: hsl-liipi-internet-sg
+- name: Configure hsl-liipi-internet security group
   local_action:
     module: ec2_group
     name: hsl-liipi-internet
@@ -68,3 +60,17 @@
     #     # description to use if example-other needs to be created
     #     group_desc: other example EC2 group
   register: internet-sg
+
+- name: Configure hsl-liipi-gocd security group
+  local_action:
+    module: ec2_group
+    name: hsl-liipi-gocd
+    description: hsl-liipi-internet
+    vpc_id: '{{ vpc.vpc_id }}'
+    region: eu-west-1
+    rules:
+      - proto: tcp
+        from_port: 8154
+        to_port: 8154
+        cidr_ip: 0.0.0.0/0
+  register: gocd-sg
